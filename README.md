@@ -1,2 +1,2 @@
 # Smart_Surveillance
-Licensee plate detection and driver identification system.
+License plate detection and driver identification system.
