@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 import base64
 import numpy as np
+import time
 
 # Initialize the dlib face detector
 detector = dlib.get_frontal_face_detector()
@@ -19,17 +20,22 @@ class FaceDetection(Resource):
     def post(self):
         # Handle the notification when a face is detected
         try:
+            time.sleep(1)  # Add a delay of 1 second between frame captures
+
             _, frame = camera.read()  # Read a frame from the camera
 
             # Convert the frame to grayscale for face detection
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            # Detect faces in the grayscale frame
-            faces = detector(gray)
+            # Adjust the face detection threshold
+            faces = detector(gray, 1)  # Increase the threshold (1) for stricter detection
 
             if len(faces) > 0:
                 # Handle the notification when a face is detected
-                print("Face Detected")
+                print(f"Detected {len(faces)} faces.")
+                for i, face in enumerate(faces):
+                    print(f"Face {i}: Confidence {face.confidence}")
+
                 # Encode the frame as base64 to send back to the app
                 _, buffer = cv2.imencode('.jpg', frame)
                 frame_base64 = base64.b64encode(buffer).decode('utf-8')
