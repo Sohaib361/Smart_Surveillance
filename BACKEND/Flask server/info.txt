@@ -1,0 +1,1 @@
+App.py is used to make connection with app and database through flask server.
